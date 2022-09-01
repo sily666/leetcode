@@ -1,0 +1,97 @@
+94. 二叉树的中序遍历[https://leetcode.cn/problems/binary-tree-inorder-traversal/]
+```C++ //递归
+class Solution {
+public:
+    void fn(TreeNode* root, vector<int>& res) {
+        if(!root) return;
+        fn(root->left, res);
+        res.push_back(root->val);
+        fn(root->right, res);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        fn(root, res);
+        return res;
+
+    }
+};
+```
+``` //迭代
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> stk;
+        while(root != nullptr || !stk.empty()) {
+            while(root != nullptr) {
+                stk.push(root);
+                root = root->left;
+            }
+            root = stk.top();
+            stk.pop();
+            res.push_back(root->val);
+            root = root->right;
+        }
+
+        return res;
+
+    }
+};
+```
+100. 相同的树[https://leetcode.cn/problems/same-tree/]
+```C++
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p == nullptr && q == nullptr) return true;
+        if(p == nullptr || q == nullptr) return false;
+        if(p->val != q->val) return false;
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    }
+};
+```
+101. 对称二叉树[https://leetcode.cn/problems/symmetric-tree/]
+```C++
+class Solution {
+public:
+    bool check(TreeNode* p, TreeNode* q) {
+        if(p == nullptr && q == nullptr) return true;
+        if(p == nullptr || q == nullptr) return false;
+        if(p->val != q->val) return false;
+        return check(p->left, q->right) && check(p->right, q->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        return check(root, root); //在内部调用函数，参数变为两个
+    }
+};
+```
+```C++
+class Solution {
+public:
+    bool check(TreeNode* p, TreeNode* q) {
+        queue<TreeNode*> que;
+        que.push(p);
+        que.push(q);
+        while(!que.empty()){
+            p = que.front();
+            que.pop();
+            q = que.front();
+            que.pop();
+            if(!p && !q) continue;
+            if(!p || !q) return false;
+            if(p->val != q->val) return false;
+            que.push(p->left);
+            que.push(q->right);
+
+            que.push(p->right);
+            que.push(q->left);
+        }
+        return true;
+    }
+    bool isSymmetric(TreeNode* root) {
+
+        return check(root, root);
+
+    }
+};
+```
